@@ -5,7 +5,7 @@ namespace App\Tests\Entity;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 
-class UserTest extends TestCase
+class BorrowTest extends TestCase
 {
     // Test case to create a user and validate its properties
     public function testCreateUser()

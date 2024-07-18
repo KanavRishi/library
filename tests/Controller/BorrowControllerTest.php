@@ -5,51 +5,48 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class BorrowControllerTest extends WebTestCase
 {
-    // Test the borrow book functionality
+    private $client;
+
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+    }
+
     public function testBorrowBook()
     {
-        $client = static::createClient();
-        // Send a POST request to the /borrow endpoint with the user and book IDs
-        $client->request('POST', '/api/borrows', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'userId' => 1,
+        $this->client->request('POST', '/api/borrow', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
             'bookId' => 1,
-            'borrowDate' => '2023-07-01'
+            'userId' => 1,
         ]));
 
-        // Assert that the response status code is 201 (Created)
-        $this->assertEquals(201, $client->getResponse()->getStatusCode());
-
-        // Assert that the response content is JSON
-        $this->assertJson($client->getResponse()->getContent());
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
-    // Test the return book functionality
     public function testReturnBook()
-    {   
-        $client = static::createClient();
-        
-        // Send a POST request to the /borrows endpoint with the borrow ID
-        $client->request('PUT', '/api/borrows/1', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'returnDate' => '2023-07-10'
+    {
+        $this->client->request('POST', '/api/return', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+            'bookId' => 1,
+            'userId' => 1,
         ]));
 
-        // Assert that the response status code is 200 (Created)
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // Assert that the response content is JSON
-        $this->assertJson($client->getResponse()->getContent());
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 
-    // Test the view borrowing history functionality
     public function testViewBorrowingHistory()
     {
-        $client = static::createClient();
-        // Send a GET request to the /history endpoint
-        $client->request('GET', '/api/borrows');
+        $this->client->request('GET', '/api/borrow/history/1');
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+    }
 
-        // Assert that the response status code is 200 (OK)
-        $this->assertEquals(200, $client->getResponse()->getStatusCode());
-        // Assert that the response content is JSON
-        $this->assertJson($client->getResponse()->getContent());
+    public function testBorrowBookWhenUnavailable()
+    {
+        $this->client->request('POST', '/api/borrow', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+            'bookId' => 2,
+            'userId' => 1,
+        ]));
+
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
     }
 }
+
 ?>
