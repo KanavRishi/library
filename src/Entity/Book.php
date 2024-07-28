@@ -5,25 +5,26 @@ namespace App\Entity;
 use App\Repository\BookRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraint as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type:'string', length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type:'string',length: 255)]
     private ?string $author = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type:'string', length: 255)]
     private ?string $genre = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type:'string',length:13)]
     private ?int $isbn = null;
 
     #[ORM\Column(length: 255)]

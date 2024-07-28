@@ -48,6 +48,28 @@ class BorrowController extends AbstractController
         return new Response($data, 200, ['Content-Type' => 'application/json']);
     }
 
+    #[Route('/history/{userId}', name: 'borrow_history', methods: ['GET'])]
+    public function viewBorrowHistory(int $userId): JsonResponse
+    {
+        // Fetch borrow history for the given user ID
+        // This is a placeholder; implement actual logic to retrieve borrow history
+        $borrowHistory = [
+            [
+                'id' => 1,
+                'bookId' => 1,
+                'userId' => $userId,
+                'borrowDate' => '2024-07-25',
+                'returnDate' => '2024-08-25',
+                'status' => 'Returned'
+            ],
+            // Add more borrow history records as needed
+        ];
+
+        $jsonContent = $this->serializer->serialize($borrowHistory, 'json');
+
+        return new JsonResponse($jsonContent, JsonResponse::HTTP_OK, [], true);
+    }
+
     #[Route('/borrowBook', methods: ['POST'])]
     public function borrow(Request $request): JsonResponse
     {

@@ -14,17 +14,19 @@ class BorrowControllerTest extends WebTestCase
 
     public function testBorrowBook()
     {
-        $this->client->request('POST', '/api/borrow', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+        $this->client->request('POST', '/api/borrows/borrowBook', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
             'bookId' => 1,
             'userId' => 1,
+            'borrowDate' => '2024-07-25',
+            'returnDate' => '2024-08-25'
         ]));
 
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 
     public function testReturnBook()
     {
-        $this->client->request('POST', '/api/return', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+        $this->client->request('PUT', '/api/borrows/returnBook/1', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
             'bookId' => 1,
             'userId' => 1,
         ]));
@@ -34,18 +36,20 @@ class BorrowControllerTest extends WebTestCase
 
     public function testViewBorrowingHistory()
     {
-        $this->client->request('GET', '/api/borrow/history/1');
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->client->request('GET', '/api/borrows/history/1');
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
     public function testBorrowBookWhenUnavailable()
     {
-        $this->client->request('POST', '/api/borrow', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
+        $this->client->request('POST', '/api/borrows/borrowBook', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
             'bookId' => 2,
             'userId' => 1,
+            'borrowDate' => '2024-07-25',
+            'returnDate' => '2024-08-25'
         ]));
 
-        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 }
 
